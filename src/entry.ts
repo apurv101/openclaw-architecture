@@ -8,6 +8,28 @@
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
+
+// Load .env from cwd (don't override existing env vars)
+function loadDotEnv() {
+  try {
+    const envPath = path.join(process.cwd(), ".env");
+    const content = fs.readFileSync(envPath, "utf-8");
+    for (const line of content.split("\n")) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const eqIdx = trimmed.indexOf("=");
+      if (eqIdx === -1) continue;
+      const key = trimmed.slice(0, eqIdx).trim();
+      const value = trimmed.slice(eqIdx + 1).trim();
+      if (key && !(key in process.env)) {
+        process.env[key] = value;
+      }
+    }
+  } catch {
+    // No .env file — that's fine
+  }
+}
+loadDotEnv();
 import readline from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import {
