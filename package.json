@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "description": "Terminal-only AI agent with full openclaw intelligence",
   "type": "module",
-  "main": "dist/entry.js",
+  "main": "dist/entry.mjs",
   "bin": {
-    "openclaw-mini": "dist/entry.js"
+    "openclaw-mini": "dist/entry.mjs"
   },
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown src/entry.ts",
     "dev": "node --import tsx src/entry.ts",
-    "start": "node dist/entry.js",
+    "start": "node dist/entry.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

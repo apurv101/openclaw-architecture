@@ -47,8 +47,7 @@ import {
   detectRuntime,
   loadContextFiles,
 } from "./system-prompt.js";
-import { createWebFetchToolDefinition } from "./tools/web-fetch.js";
-import { createWebSearchToolDefinition } from "./tools/web-search.js";
+import { createAllToolDefinitions } from "./tools/index.js";
 
 // ─── Configuration ───────────────────────────────────────────────────────────
 
@@ -177,16 +176,8 @@ function resolveSessionFile(sessionId: string): string {
 
 // ─── Custom tools ────────────────────────────────────────────────────────────
 
-function buildCustomTools() {
-  const tools: any[] = [];
-
-  // Always add web_fetch — it's useful regardless of API keys
-  tools.push(createWebFetchToolDefinition());
-
-  // Add web_search — works with BRAVE_API_KEY, PERPLEXITY_API_KEY, or OPENROUTER_API_KEY
-  tools.push(createWebSearchToolDefinition());
-
-  return tools;
+function buildCustomTools(): any[] {
+  return createAllToolDefinitions();
 }
 
 // ─── System prompt override ──────────────────────────────────────────────────

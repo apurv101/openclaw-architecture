@@ -66,6 +66,7 @@ export function detectRuntime(provider: string, modelId: string): RuntimeInfo {
 // ─── Tool summaries ──────────────────────────────────────────────────────────
 
 const CORE_TOOL_SUMMARIES: Record<string, string> = {
+  // Built-in
   read: "Read file contents",
   write: "Create or overwrite files",
   edit: "Make precise edits to files",
@@ -76,10 +77,52 @@ const CORE_TOOL_SUMMARIES: Record<string, string> = {
   ls: "List directory contents",
   exec: "Run shell commands (pty available for TTY-required CLIs)",
   process: "Manage background exec sessions",
-  web_search: "Search the web (Brave/Perplexity/Grok)",
-  web_fetch: "Fetch and extract readable content from a URL",
   browser: "Control web browser",
   image: "Analyze an image with the configured image model",
+  // Web
+  web_search: "Search the web (Brave/Perplexity)",
+  web_fetch: "Fetch and extract readable content from a URL",
+  // Structural
+  structural_beam: "Analyze beams: reactions, shear/moment diagrams, deflections, stress checks (SVG output)",
+  structural_column: "Check steel/concrete columns: slenderness, buckling, interaction equations (AISC 360 / ACI 318)",
+  structural_slab: "Design one-way and two-way concrete slabs: flexure, shear, deflection (ACI 318)",
+  structural_foundation: "Design spread/strip/mat foundations: bearing, settlement, overturning, sliding (ACI 318)",
+  // Cost
+  cost_estimate: "Generate construction cost estimates with CSI division breakdown, location factors, and soft costs",
+  quantity_takeoff: "Generate material quantity estimates by CSI division from building parameters (concrete, steel, finishes, MEP)",
+  // Compliance
+  building_code_check: "Validate building designs against IBC 2021: height/area, egress, fire resistance",
+  ada_compliance_check: "Check ADA accessibility: corridors, doors, ramps, restrooms, parking, elevators",
+  sustainability_check: "Evaluate LEED v4.1 credits: energy, water, materials, indoor environment, site",
+  zoning_lookup: "Look up zoning requirements: setbacks, FAR, height limits, parking, lot coverage",
+  // MEP
+  hvac_load_calc: "Calculate heating/cooling loads (ASHRAE CLTD/SCL method) with equipment sizing",
+  electrical_load_calc: "Calculate electrical demand (NEC Article 220): panel sizing, voltage drop, feeder sizing",
+  plumbing_fixture_calc: "Size plumbing systems (IPC): fixture units, pipe sizing, water heater sizing",
+  // Energy
+  energy_model: "Annual energy simulation (degree-day method): end-use breakdown, ASHRAE benchmarking, CO2",
+  daylight_analysis: "Daylight factor analysis (BRE split-flux method): room analysis, LEED daylight credits",
+  // Floorplan
+  floorplan_generate_svg: "Generate floor plan layouts from room programs using space partitioning (SVG output)",
+  floorplan_analyze: "Analyze floor plan images or SVGs: room detection, area calculation, circulation",
+  // IFC / BIM
+  ifc_parse: "Parse IFC/BIM files: spatial hierarchy, element counts, properties (requires ifcopenshell)",
+  ifc_generate: "Generate IFC files from structured descriptions (requires ifcopenshell)",
+  ifc_modify: "Modify IFC element properties and relationships (requires ifcopenshell)",
+  ifc_query: "Query specific elements and data from IFC files (requires ifcopenshell)",
+  ifc_validate: "Validate IFC files: syntax, schema, and custom rules (requires ifcopenshell)",
+  // DXF / CAD
+  dxf_parse: "Parse DXF/CAD files: layers, entities, blocks, properties (requires ezdxf)",
+  dxf_generate: "Generate DXF files with lines, polylines, circles, arcs, text, hatches (requires ezdxf)",
+  dxf_to_svg: "Convert DXF files to SVG with layer filtering and scaling (requires ezdxf)",
+  // Conversion / 3D
+  format_convert: "Convert between IFC/OBJ/DXF/STL/glTF/gbXML formats",
+  model_section: "Generate 2D section cuts through 3D models (SVG/DXF output)",
+  point_cloud_process: "Process point clouds (LAS/LAZ/PLY/E57): downsample, segment, reconstruct",
+  // Documentation
+  spec_writer: "Generate CSI MasterFormat specification outlines with three-part section format",
+  schedule_generator: "Generate preliminary construction schedules with phases, milestones, and critical path",
+  submittal_log: "Generate construction submittal logs (shop drawings, product data, samples) by CSI section",
 };
 
 // ─── System prompt builder ───────────────────────────────────────────────────
@@ -112,7 +155,9 @@ export function buildSystemPrompt(params: {
   });
 
   const lines = [
-    "You are a personal coding assistant running inside openclaw-mini.",
+    "You are openclaw-mini — an AI assistant with deep expertise in architecture, engineering, and construction (AEC).",
+    "You combine general coding intelligence with specialized tools for structural analysis, building code compliance, cost estimation, energy modeling, BIM/CAD operations, and more.",
+    "When a user asks about building design, structural engineering, MEP systems, code compliance, or construction, use your specialized tools to provide precise, standards-backed answers.",
     "",
     "## Tooling",
     "Tool availability (filtered by policy):",
