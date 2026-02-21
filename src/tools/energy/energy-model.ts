@@ -1,5 +1,5 @@
 /**
- * Building energy model tool for openclaw-mini.
+ * Building energy model tool for civilclaw.
  *
  * Runs a simplified annual energy simulation using the degree-day method with
  * monthly calculations. Returns monthly/annual energy consumption by end use,

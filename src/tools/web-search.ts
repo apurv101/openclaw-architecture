@@ -1,5 +1,5 @@
 /**
- * Simplified web_search tool for openclaw-mini.
+ * Simplified web_search tool for civilclaw.
  *
  * Supports Brave Search (default) and Perplexity (via OpenRouter or direct).
  * Reads API keys from environment variables.
@@ -132,8 +132,8 @@ async function searchPerplexity(params: {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${params.apiKey}`,
-        "HTTP-Referer": "https://openclaw.ai",
-        "X-Title": "OpenClaw Mini Web Search",
+        "HTTP-Referer": "https://civilclaw.ai",
+        "X-Title": "CivilClaw Web Search",
       },
       body: JSON.stringify({
         model,

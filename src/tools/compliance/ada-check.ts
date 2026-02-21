@@ -1,5 +1,5 @@
 /**
- * ADA Compliance Check tool for openclaw-mini.
+ * ADA Compliance Check tool for civilclaw.
  *
  * Checks a building design against ADA (Americans with Disabilities Act)
  * Standards for Accessible Design requirements including accessible routes,

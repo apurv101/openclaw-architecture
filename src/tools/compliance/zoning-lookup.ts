@@ -1,5 +1,5 @@
 /**
- * Zoning Lookup tool for openclaw-mini.
+ * Zoning Lookup tool for civilclaw.
  *
  * Looks up zoning requirements for a US address or zone code. Returns setbacks,
  * FAR, lot coverage, height limits, permitted uses, and parking requirements

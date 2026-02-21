@@ -1,5 +1,5 @@
 /**
- * DXF to SVG conversion tool for openclaw-mini.
+ * DXF to SVG conversion tool for civilclaw.
  *
  * Renders a DXF file as SVG using the ezdxf drawing addon (via Python).
  * Supports layer filtering, scaling, and background color options.

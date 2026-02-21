@@ -1,5 +1,5 @@
 /**
- * Construction schedule generator tool for openclaw-mini.
+ * Construction schedule generator tool for civilclaw.
  *
  * Generates a preliminary construction schedule with phases, milestones,
  * and critical path identification based on building type, size, and

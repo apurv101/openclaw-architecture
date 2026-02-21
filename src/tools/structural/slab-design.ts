@@ -1,5 +1,5 @@
 /**
- * Structural Slab Design tool for openclaw-mini.
+ * Structural Slab Design tool for civilclaw.
  *
  * Designs/checks a reinforced concrete slab for flexure, shear, and deflection
  * per ACI 318. Supports one-way and two-way slabs with various support conditions.

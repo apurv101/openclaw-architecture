@@ -1,5 +1,5 @@
 /**
- * Project specification writer tool for openclaw-mini.
+ * Project specification writer tool for civilclaw.
  *
  * Generates structured construction specification outlines following
  * CSI MasterFormat organization. Produces spec sections with standard

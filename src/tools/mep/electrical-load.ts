@@ -1,5 +1,5 @@
 /**
- * Electrical Load Calculation tool for openclaw-mini.
+ * Electrical Load Calculation tool for civilclaw.
  *
  * Calculates electrical demand for buildings per NEC Article 220, including
  * panel sizing, service entrance requirements, and voltage drop analysis.

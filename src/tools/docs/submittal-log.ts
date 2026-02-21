@@ -1,5 +1,5 @@
 /**
- * Construction submittal log generator tool for openclaw-mini.
+ * Construction submittal log generator tool for civilclaw.
  *
  * Generates a submittal log based on CSI divisions and specification sections,
  * tracking required submittals (shop drawings, product data, samples, etc.)

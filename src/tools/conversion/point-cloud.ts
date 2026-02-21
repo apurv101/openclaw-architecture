@@ -1,5 +1,5 @@
 /**
- * Point Cloud Process tool for openclaw-mini.
+ * Point Cloud Process tool for civilclaw.
  *
  * Processes point cloud data (LAS/LAZ/PLY/E57) with operations including
  * info extraction, voxel downsampling, RANSAC plane segmentation,

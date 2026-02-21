@@ -1,5 +1,5 @@
 /**
- * Structural Foundation Design tool for openclaw-mini.
+ * Structural Foundation Design tool for civilclaw.
  *
  * Designs/checks spread footings and strip footings for bearing capacity,
  * settlement, overturning, sliding, and structural adequacy per ACI 318

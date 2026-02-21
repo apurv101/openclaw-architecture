@@ -1,5 +1,5 @@
 /**
- * Barrel file — exports all tool definitions for openclaw-mini.
+ * Barrel file — exports all tool definitions for civilclaw.
  *
  * Each tool follows the pattern: createXxxToolDefinition() → ToolDefinition
  */

@@ -1,5 +1,5 @@
 /**
- * Plumbing Fixture Calculation tool for openclaw-mini.
+ * Plumbing Fixture Calculation tool for civilclaw.
  *
  * Calculates plumbing fixture requirements, pipe sizing, and water supply
  * demand per IPC (International Plumbing Code). Includes minimum fixture

@@ -1,5 +1,5 @@
 /**
- * DXF Generate tool for openclaw-mini.
+ * DXF Generate tool for civilclaw.
  *
  * Creates new DXF (Drawing Exchange Format) files from a specification object
  * using ezdxf (via Python).  Supports lines, polylines, circles, arcs, text,

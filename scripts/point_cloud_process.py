@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Point cloud processing script for openclaw-mini.
+Point cloud processing script for civilclaw.
 
 Processes point cloud data (LAS/LAZ/PLY/E57) with operations including
 info extraction, voxel downsampling, RANSAC plane segmentation,

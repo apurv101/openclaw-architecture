@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Model section script for openclaw-mini.
+Model section script for civilclaw.
 
 Generates 2D section cuts (horizontal or vertical) through 3D IFC or OBJ
 models, producing SVG or DXF output with contour lines.

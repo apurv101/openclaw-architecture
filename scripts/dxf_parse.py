@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DXF Parse script for openclaw-mini.
+DXF Parse script for civilclaw.
 
 Reads a DXF file using ezdxf and extracts layers, entities, blocks,
 and geometric properties.  Receives JSON arguments on stdin and writes

@@ -1,5 +1,5 @@
 /**
- * Quantity takeoff tool for openclaw-mini.
+ * Quantity takeoff tool for civilclaw.
  *
  * Generates material quantity estimates from building parameters.
  * Covers structural, envelope, interior, and site work quantities

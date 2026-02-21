@@ -1,6 +1,6 @@
-# openclaw-mini Feature Roadmap
+# civilclaw Feature Roadmap
 
-openclaw-mini is a lightweight terminal AI agent (~1,076 lines, 4 source files) built on the `pi-coding-agent` SDK. Compared to the full openclaw (100+ source files), it's missing several major AI features that significantly impact user experience.
+civilclaw is a lightweight terminal AI agent (~1,076 lines, 4 source files) built on the `pi-coding-agent` SDK. Compared to the full openclaw (100+ source files), it's missing several major AI features that significantly impact user experience.
 
 This document describes **9 features** to implement, ordered by effort (easiest first), with detailed implementation plans.
 
@@ -28,7 +28,7 @@ This document describes **9 features** to implement, ordered by effort (easiest 
 
 ### What it does
 
-Expands thinking control from 3 levels (`off`/`on`/`stream`) to 6 levels (`off`/`minimal`/`low`/`medium`/`high`/`xhigh`). The SDK's `ThinkingLevel` type already supports all 6 — openclaw-mini just hardcodes 3.
+Expands thinking control from 3 levels (`off`/`on`/`stream`) to 6 levels (`off`/`minimal`/`low`/`medium`/`high`/`xhigh`). The SDK's `ThinkingLevel` type already supports all 6 — civilclaw just hardcodes 3.
 
 ### Why it matters
 
@@ -182,7 +182,7 @@ When the conversation approaches the context window limit, automatically summari
 
 ### Why it matters
 
-openclaw-mini currently has no strategy for when conversations exceed the context window. Long coding sessions will just fail or lose context. Compaction lets users have infinite-length sessions.
+civilclaw currently has no strategy for when conversations exceed the context window. Long coding sessions will just fail or lose context. Compaction lets users have infinite-length sessions.
 
 ### Files to modify
 
@@ -249,7 +249,7 @@ interface CompactionResult {
 
 ### What it does
 
-Users can extend the agent's capabilities by dropping `SKILL.md` files in the workspace or `~/.openclaw/skills/`. These get discovered, loaded, and injected into the system prompt as available skills.
+Users can extend the agent's capabilities by dropping `SKILL.md` files in the workspace or `~/.civilclaw/skills/`. These get discovered, loaded, and injected into the system prompt as available skills.
 
 ### Why it matters
 
@@ -333,7 +333,7 @@ When the primary model/provider fails (rate limit, timeout, auth error), automat
 
 ### Why it matters
 
-If the configured model is down or rate-limited, openclaw-mini just fails. Fallback chains make it resilient — it can try Anthropic, then OpenAI, then Gemini automatically.
+If the configured model is down or rate-limited, civilclaw just fails. Fallback chains make it resilient — it can try Anthropic, then OpenAI, then Gemini automatically.
 
 ### New files
 
@@ -349,7 +349,7 @@ If the configured model is down or rate-limited, openclaw-mini just fails. Fallb
 
 ```bash
 # .env
-OPENCLAW_FALLBACK_MODELS=openai/gpt-4.1,anthropic/claude-sonnet-4-20250514,google/gemini-2.5-pro
+CIVILCLAW_FALLBACK_MODELS=openai/gpt-4.1,anthropic/claude-sonnet-4-20250514,google/gemini-2.5-pro
 ```
 
 #### Data structures
@@ -370,7 +370,7 @@ interface ProviderCooldown {
 
 #### Logic
 
-1. Parse `OPENCLAW_FALLBACK_MODELS` at startup into ordered list
+1. Parse `CIVILCLAW_FALLBACK_MODELS` at startup into ordered list
 2. On API error (429, 500, 503, timeout, auth failure), check if retryable
 3. Find next model not in cooldown
 4. Re-resolve auth for the fallback provider via `ensureApiKeyInEnv()`
@@ -597,8 +597,8 @@ interface HookResult {
 
 #### Discovery
 
-1. `.openclaw/hooks/` in workspace — project-specific hooks
-2. `~/.openclaw/hooks/` — global hooks
+1. `.civilclaw/hooks/` in workspace — project-specific hooks
+2. `~/.civilclaw/hooks/` — global hooks
 3. Files named by convention: `before-prompt.js`, `after-tool-call.js`, etc.
 
 #### Execution
@@ -620,7 +620,7 @@ class HookRunner {
 #### Example: log all bash commands
 
 ```javascript
-// .openclaw/hooks/log-bash.js
+// .civilclaw/hooks/log-bash.js
 import fs from "node:fs";
 
 export default async (context) => {
@@ -642,7 +642,7 @@ Vector-based persistent memory that lets the agent remember information across s
 
 ### Why it matters
 
-Without memory, every openclaw-mini session starts from zero. The agent can't remember user preferences, past decisions, project context from previous conversations, or learn from mistakes. This is the single biggest gap between openclaw-mini and the full openclaw. It's what turns a stateless tool into a persistent assistant that knows you and your project.
+Without memory, every civilclaw session starts from zero. The agent can't remember user preferences, past decisions, project context from previous conversations, or learn from mistakes. This is the single biggest gap between civilclaw and the full openclaw. It's what turns a stateless tool into a persistent assistant that knows you and your project.
 
 ### New dependencies
 
@@ -692,7 +692,7 @@ CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
 );
 ```
 
-**Storage location:** `~/.openclaw/memory/memory.db`
+**Storage location:** `~/.civilclaw/memory/memory.db`
 
 #### Embedding provider
 
@@ -848,5 +848,5 @@ For each feature, verify by:
 | Skills | Drop a `SKILL.md` in workspace, check `/skills` |
 | Fallback | Set primary to invalid key, verify switch |
 | Subagents | Ask "research X while implementing Y" |
-| Hooks | Create `.openclaw/hooks/before-prompt.js`, verify behavior |
+| Hooks | Create `.civilclaw/hooks/before-prompt.js`, verify behavior |
 | Memory | Chat → `/new` → search for previous context via agent |

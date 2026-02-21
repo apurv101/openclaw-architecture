@@ -1,5 +1,5 @@
 /**
- * IFC Query tool for openclaw-mini.
+ * IFC Query tool for civilclaw.
  *
  * Queries elements within an IFC/BIM file by type, material, property value,
  * spatial containment (space), or classification reference.

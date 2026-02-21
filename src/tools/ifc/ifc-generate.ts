@@ -1,5 +1,5 @@
 /**
- * IFC Generate tool for openclaw-mini.
+ * IFC Generate tool for civilclaw.
  *
  * Generates a new IFC/BIM file from a structured specification describing
  * a project, site, building, stories, spaces, walls, and openings.

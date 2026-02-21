@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DXF Generate script for openclaw-mini.
+DXF Generate script for civilclaw.
 
 Creates a new DXF file from a specification object describing layers and
 entities.  Supports LINE, LWPOLYLINE, CIRCLE, ARC, TEXT, MTEXT, DIMENSION,
@@ -135,8 +135,8 @@ def main():
                 p1 = _to_vec(edef.get("p1", [0, 0]))
                 p2 = _to_vec(edef.get("p2", [10, 0]))
                 # Create a dimension style if not exists
-                if "OPENCLAW" not in doc.dimstyles:
-                    doc.dimstyles.new("OPENCLAW", dxfattribs={
+                if "CIVILCLAW" not in doc.dimstyles:
+                    doc.dimstyles.new("CIVILCLAW", dxfattribs={
                         "dimtxt": float(edef.get("text_height", 2.5)),
                         "dimasz": float(edef.get("arrow_size", 2.5)),
                     })
@@ -144,7 +144,7 @@ def main():
                     base=base,
                     p1=p1,
                     p2=p2,
-                    dimstyle="OPENCLAW",
+                    dimstyle="CIVILCLAW",
                     override=dxfattribs,
                 )
                 dim.render()

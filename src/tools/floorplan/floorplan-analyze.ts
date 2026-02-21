@@ -1,5 +1,5 @@
 /**
- * Floor Plan Analyze tool for openclaw-mini.
+ * Floor Plan Analyze tool for civilclaw.
  *
  * Analyzes a floor plan image (PNG/JPG/PDF) or vector file (SVG/DXF) using
  * AI vision to extract rooms, dimensions, walls, and produce a structured

@@ -1,5 +1,5 @@
 /**
- * Model Section tool for openclaw-mini.
+ * Model Section tool for civilclaw.
  *
  * Generates 2D section cuts (horizontal or vertical) through 3D IFC or OBJ
  * models, producing SVG or DXF output of the resulting contour lines.

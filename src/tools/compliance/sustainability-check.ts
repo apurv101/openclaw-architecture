@@ -1,5 +1,5 @@
 /**
- * Sustainability Check tool for openclaw-mini.
+ * Sustainability Check tool for civilclaw.
  *
  * Evaluates a building design against LEED v4.1 BD+C (Building Design and
  * Construction) criteria. Estimates achievable credits and certification level

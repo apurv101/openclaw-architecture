@@ -1,5 +1,5 @@
 /**
- * IFC Modify tool for openclaw-mini.
+ * IFC Modify tool for civilclaw.
  *
  * Modifies an existing IFC/BIM file by applying a sequence of operations:
  * set property, add element, remove element, or set material.

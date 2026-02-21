@@ -1,11 +1,11 @@
 {
-  "name": "openclaw-mini",
+  "name": "civilclaw",
   "version": "0.1.0",
-  "description": "Terminal-only AI agent with full openclaw intelligence",
+  "description": "Terminal-only AI agent with full civilclaw intelligence",
   "type": "module",
   "main": "dist/entry.mjs",
   "bin": {
-    "openclaw-mini": "dist/entry.mjs"
+    "civilclaw": "dist/entry.mjs"
   },
   "scripts": {
     "build": "tsdown src/entry.ts",

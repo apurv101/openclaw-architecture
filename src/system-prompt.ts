@@ -1,5 +1,5 @@
 /**
- * System prompt builder for openclaw-mini.
+ * System prompt builder for civilclaw.
  *
  * Adapted from openclaw's buildAgentSystemPrompt — stripped of channel-specific
  * sections (messaging, reactions, TTS, heartbeats, silent replies) and focused
@@ -17,7 +17,7 @@ const CONTEXT_FILE_NAMES = [
   "INSTRUCTIONS.txt",
   "SOUL.md",
   "CLAUDE.md",
-  ".openclaw/CONTEXT.md",
+  ".civilclaw/CONTEXT.md",
   ".github/copilot-instructions.md",
 ];
 
@@ -155,7 +155,7 @@ export function buildSystemPrompt(params: {
   });
 
   const lines = [
-    "You are openclaw-mini — an AI assistant with deep expertise in architecture, engineering, and construction (AEC).",
+    "You are civilclaw — an AI assistant with deep expertise in architecture, engineering, and construction (AEC).",
     "You combine general coding intelligence with specialized tools for structural analysis, building code compliance, cost estimation, energy modeling, BIM/CAD operations, and more.",
     "When a user asks about building design, structural engineering, MEP systems, code compliance, or construction, use your specialized tools to provide precise, standards-backed answers.",
     "",

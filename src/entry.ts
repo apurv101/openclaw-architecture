@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * openclaw-mini: Terminal-only AI agent with full coding intelligence.
+ * civilclaw: Terminal-only AI agent with full coding intelligence.
  *
  * Uses the PI SDK directly — same engine as openclaw, no channel overhead.
  * Enhanced with: rich system prompt, web tools, context file loading.
@@ -51,20 +51,20 @@ import { createAllToolDefinitions } from "./tools/index.js";
 
 // ─── Configuration ───────────────────────────────────────────────────────────
 
-const OPENCLAW_HOME = path.join(os.homedir(), ".openclaw");
-const AGENT_ID = process.env.OPENCLAW_AGENT ?? "main";
-const AGENT_DIR = path.join(OPENCLAW_HOME, "agents", AGENT_ID, "agent");
+const CIVILCLAW_HOME = path.join(os.homedir(), ".civilclaw");
+const AGENT_ID = process.env.CIVILCLAW_AGENT ?? "main";
+const AGENT_DIR = path.join(CIVILCLAW_HOME, "agents", AGENT_ID, "agent");
 const MODELS_JSON = path.join(AGENT_DIR, "models.json");
 const AUTH_PROFILES_JSON = path.join(AGENT_DIR, "auth-profiles.json");
-const SESSION_DIR = path.join(OPENCLAW_HOME, "state", "sessions", "mini");
+const SESSION_DIR = path.join(CIVILCLAW_HOME, "state", "sessions", "mini");
 
-const DEFAULT_PROVIDER = process.env.OPENCLAW_PROVIDER ?? "anthropic";
-const DEFAULT_MODEL = process.env.OPENCLAW_MODEL ?? "claude-sonnet-4-20250514";
+const DEFAULT_PROVIDER = process.env.CIVILCLAW_PROVIDER ?? "anthropic";
+const DEFAULT_MODEL = process.env.CIVILCLAW_MODEL ?? "claude-sonnet-4-20250514";
 
 // ─── Ensure directories ─────────────────────────────────────────────────────
 
 function ensureDirs() {
-  for (const dir of [OPENCLAW_HOME, AGENT_DIR, SESSION_DIR]) {
+  for (const dir of [CIVILCLAW_HOME, AGENT_DIR, SESSION_DIR]) {
     fs.mkdirSync(dir, { recursive: true });
   }
 }
@@ -246,7 +246,7 @@ async function main() {
   if (!hasKey) {
     const envKey = ENV_KEY_MAP[provider]?.[0] ?? `${provider.toUpperCase()}_API_KEY`;
     console.error(`No API key found for ${provider}.`);
-    console.error(`Set ${envKey} or run "openclaw configure" to set up auth.`);
+    console.error(`Set ${envKey} or run "civilclaw configure" to set up auth.`);
     process.exit(1);
   }
 
@@ -270,7 +270,7 @@ async function main() {
     thinkingLevel,
   });
 
-  console.log(`\x1b[2m┌ openclaw-mini\x1b[0m`);
+  console.log(`\x1b[2m┌ civilclaw\x1b[0m`);
   console.log(`\x1b[2m│ model: ${provider}/${modelId}\x1b[0m`);
   console.log(`\x1b[2m│ workspace: ${workspaceDir}\x1b[0m`);
   console.log(`\x1b[2m│ session: ${sessionId}\x1b[0m`);
@@ -305,7 +305,7 @@ async function main() {
     if (trimmed.startsWith("/model")) {
       console.log(`\x1b[2mCurrent: ${provider}/${modelId}\x1b[0m`);
       console.log(
-        `\x1b[2mChange via OPENCLAW_PROVIDER and OPENCLAW_MODEL env vars.\x1b[0m\n`,
+        `\x1b[2mChange via CIVILCLAW_PROVIDER and CIVILCLAW_MODEL env vars.\x1b[0m\n`,
       );
       continue;
     }

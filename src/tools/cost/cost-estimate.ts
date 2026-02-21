@@ -1,5 +1,5 @@
 /**
- * Construction cost estimation tool for openclaw-mini.
+ * Construction cost estimation tool for civilclaw.
  *
  * Generates detailed cost estimates with CSI MasterFormat division breakdowns,
  * adjusted for location, quality level, building type, and inflation.

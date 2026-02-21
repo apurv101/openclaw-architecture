@@ -1,5 +1,5 @@
 /**
- * Structural Column Check tool for openclaw-mini.
+ * Structural Column Check tool for civilclaw.
  *
  * Checks a column for axial capacity, buckling, and combined axial+bending
  * interaction per AISC 360 (steel) or ACI 318 (concrete).

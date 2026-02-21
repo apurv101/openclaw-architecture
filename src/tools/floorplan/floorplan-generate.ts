@@ -1,5 +1,5 @@
 /**
- * Floor Plan Generator tool for openclaw-mini.
+ * Floor Plan Generator tool for civilclaw.
  *
  * Generates architectural floor plans as SVG from a room program description.
  * Uses a treemap-style binary space partitioning algorithm with architectural

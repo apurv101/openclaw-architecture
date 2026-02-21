@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Format conversion script for openclaw-mini.
+Format conversion script for civilclaw.
 
 Dispatches to the appropriate conversion routine based on input/output
 format pairs.  Supports IFC, DXF, OBJ, STL, glTF/GLB, gbXML, and SVG.

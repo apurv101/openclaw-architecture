@@ -1,5 +1,5 @@
 /**
- * IFC Parse tool for openclaw-mini.
+ * IFC Parse tool for civilclaw.
  *
  * Parses IFC/BIM files using ifcopenshell (via Python) to extract spatial
  * hierarchy, element data, property sets, and optional geometry information.

@@ -1,5 +1,5 @@
 /**
- * Daylight analysis tool for openclaw-mini.
+ * Daylight analysis tool for civilclaw.
  *
  * Calculates daylight factor and spatial daylight autonomy estimates per room
  * using the BRE split-flux daylight factor method. Useful for LEED/WELL

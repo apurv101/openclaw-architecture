@@ -1,5 +1,5 @@
 /**
- * Simplified web_fetch tool for openclaw-mini.
+ * Simplified web_fetch tool for civilclaw.
  *
  * Fetches a URL, extracts readable content using @mozilla/readability + linkedom,
  * and returns markdown or text. No firecrawl, no SSRF guards beyond URL validation.

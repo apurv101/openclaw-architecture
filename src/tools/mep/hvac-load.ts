@@ -1,5 +1,5 @@
 /**
- * HVAC Load Calculation tool for openclaw-mini.
+ * HVAC Load Calculation tool for civilclaw.
  *
  * Calculates heating and cooling loads for spaces using simplified ASHRAE
  * methods (CLTD/SCL/CLF). Returns peak loads, component breakdowns, and

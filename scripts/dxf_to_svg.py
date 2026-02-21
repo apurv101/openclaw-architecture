@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DXF to SVG conversion script for openclaw-mini.
+DXF to SVG conversion script for civilclaw.
 
 Renders a DXF file as SVG using the ezdxf drawing addon.  Supports layer
 filtering, scale control, and background colour configuration.

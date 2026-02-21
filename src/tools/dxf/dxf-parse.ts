@@ -1,5 +1,5 @@
 /**
- * DXF Parse tool for openclaw-mini.
+ * DXF Parse tool for civilclaw.
  *
  * Parses DXF (Drawing Exchange Format) files using ezdxf (via Python) to
  * extract layers, entity data, block references, and geometric properties.

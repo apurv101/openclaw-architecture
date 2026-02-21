@@ -1,5 +1,5 @@
 /**
- * Format Convert tool for openclaw-mini.
+ * Format Convert tool for civilclaw.
  *
  * Converts between CAD/BIM/3D file formats.  Supported conversions include
  * IFC to OBJ/DXF, OBJ to glTF, STL to OBJ, DXF to SVG, and gbXML to JSON.

@@ -1,5 +1,5 @@
 /**
- * IFC Validate tool for openclaw-mini.
+ * IFC Validate tool for civilclaw.
  *
  * Validates an IFC/BIM file at different check levels: syntax (file structure),
  * schema (IFC schema conformance), and rules (custom validation rules).

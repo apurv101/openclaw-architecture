@@ -1,5 +1,5 @@
 /**
- * Structural beam analysis tool for openclaw-mini.
+ * Structural beam analysis tool for civilclaw.
  *
  * Analyzes beams under various loading conditions. Calculates reactions, shear
  * force diagrams, bending moment diagrams, deflections, and checks against
