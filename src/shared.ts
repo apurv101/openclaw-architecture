@@ -4,6 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
+import { resolveWorkspaceBaseDir } from "./file-store.js";
 import {
   AuthStorage,
   ModelRegistry,
@@ -50,8 +51,10 @@ export const DEFAULT_MODEL = process.env.CIVILCLAW_MODEL ?? "claude-sonnet-4-202
 
 // ─── Ensure directories ─────────────────────────────────────────────────────
 
+export const WORKSPACE_BASE_DIR = resolveWorkspaceBaseDir();
+
 export function ensureDirs() {
-  for (const dir of [CIVILCLAW_HOME, AGENT_DIR, SESSION_DIR]) {
+  for (const dir of [CIVILCLAW_HOME, AGENT_DIR, SESSION_DIR, WORKSPACE_BASE_DIR]) {
     fs.mkdirSync(dir, { recursive: true });
   }
 }

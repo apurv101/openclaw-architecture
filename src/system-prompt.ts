@@ -129,12 +129,13 @@ const CORE_TOOL_SUMMARIES: Record<string, string> = {
 
 export function buildSystemPrompt(params: {
   workspaceDir: string;
+  sessionWorkspaceDir?: string;
   runtime: RuntimeInfo;
   toolNames: string[];
   contextFiles: ContextFile[];
   thinkingLevel?: string;
 }): string {
-  const { workspaceDir, runtime, toolNames, contextFiles, thinkingLevel } = params;
+  const { workspaceDir, sessionWorkspaceDir, runtime, toolNames, contextFiles, thinkingLevel } = params;
 
   const availableTools = new Set(toolNames.map((t) => t.toLowerCase()));
 
@@ -180,6 +181,14 @@ export function buildSystemPrompt(params: {
     `Your working directory is: ${workspaceDir}`,
     "Treat this directory as the single global workspace for file operations unless explicitly instructed otherwise.",
     "",
+    ...(sessionWorkspaceDir
+      ? [
+          "## File Workspace",
+          `Session file workspace: ${sessionWorkspaceDir}`,
+          "User-uploaded files are available here. Save any generated output files (SVGs, DXFs, IFCs, reports) here so the user can download them.",
+          "",
+        ]
+      : []),
     "## Current Date & Time",
     `Time zone: ${userTimezone}`,
     `Current time: ${currentTime}`,

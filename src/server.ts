@@ -37,6 +37,11 @@ import {
   loadContextFiles,
 } from "./system-prompt.js";
 import { createAllToolDefinitions } from "./tools/index.js";
+import { createFileStore } from "./file-store.js";
+import type { FileMetadata } from "./file-store.js";
+import { Busboy } from "@fastify/busboy";
+import { extractPdfText } from "./pdf-extractor.js";
+import { processAttachedFiles } from "./file-content-processor.js";
 
 // ─── Configuration ───────────────────────────────────────────────────────────
 
@@ -115,18 +120,25 @@ const customToolNames = customTools.map((t: any) => t.name);
 const builtInToolNames = ["read", "bash", "edit", "write"];
 const allToolNames = [...builtInToolNames, ...customToolNames];
 
+// ─── File store ─────────────────────────────────────────────────────────────
+
+const fileStore = createFileStore();
+
 // ─── Session state ───────────────────────────────────────────────────────────
 
 let sessionId = `web-${Date.now()}`;
 let sessionFile = resolveSessionFile(sessionId);
 let activeSession: any = null;
 
+// Eagerly create workspace for initial session
+fileStore.ensureWorkspace(sessionId);
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function corsHeaders(): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
   };
 }
@@ -154,10 +166,13 @@ function sendSSE(res: http.ServerResponse, event: string, data: any) {
 async function handleChat(req: http.IncomingMessage, res: http.ServerResponse) {
   const body = await readBody(req);
   let message: string;
+  let attachedFileRefs: Array<{ filename: string }> = [];
   try {
-    message = JSON.parse(body).message;
+    const parsed = JSON.parse(body);
+    message = parsed.message;
+    attachedFileRefs = parsed.files ?? [];
   } catch {
-    jsonResponse(res, 400, { error: "Invalid JSON. Expected { message: string }" });
+    jsonResponse(res, 400, { error: "Invalid JSON. Expected { message: string, files?: [...] }" });
     return;
   }
 
@@ -175,11 +190,13 @@ async function handleChat(req: http.IncomingMessage, res: http.ServerResponse) {
   });
 
   try {
+    const sessionWorkspace = fileStore.ensureWorkspace(sessionId);
     const sessionManager = SessionManager.open(sessionFile);
     const settingsManager = SettingsManager.create(workspaceDir, AGENT_DIR);
 
     const systemPrompt = buildSystemPrompt({
       workspaceDir,
+      sessionWorkspaceDir: sessionWorkspace,
       runtime,
       toolNames: allToolNames,
       contextFiles,
@@ -187,7 +204,7 @@ async function handleChat(req: http.IncomingMessage, res: http.ServerResponse) {
     });
 
     const { session } = await createAgentSession({
-      cwd: workspaceDir,
+      cwd: sessionWorkspace,
       agentDir: AGENT_DIR,
       authStorage,
       modelRegistry,
@@ -228,13 +245,27 @@ async function handleChat(req: http.IncomingMessage, res: http.ServerResponse) {
               isError: (event as any).isError,
             });
             break;
-          case "agent_end":
-            sendSSE(res, "done", {});
+          case "agent_end": {
             unsubscribe();
+            // Sync any files created by tools during this turn
+            const newFiles = fileStore.syncNewFiles(sessionId);
+            if (newFiles.length > 0) {
+              sendSSE(res, "files_updated", {
+                files: newFiles.map((f) => ({
+                  filename: f.filename,
+                  originalName: f.originalName,
+                  size: f.size,
+                  mimeType: f.mimeType,
+                  source: f.source,
+                })),
+              });
+            }
+            sendSSE(res, "done", {});
             session.dispose();
             activeSession = null;
             res.end();
             break;
+          }
         }
       } catch {
         // Client disconnected, ignore write errors
@@ -246,8 +277,29 @@ async function handleChat(req: http.IncomingMessage, res: http.ServerResponse) {
       unsubscribe();
     });
 
-    // Send the prompt
-    await session.prompt(message.trim());
+    // Resolve attached files from the store and process their content
+    const resolvedFiles: FileMetadata[] = attachedFileRefs
+      .map((ref) => fileStore.getFileMetadata(sessionId, ref.filename))
+      .filter((m): m is FileMetadata => m !== null);
+
+    const { contextText, images, warnings } = await processAttachedFiles(
+      resolvedFiles,
+      sessionId,
+      fileStore,
+    );
+
+    if (warnings.length > 0) {
+      sendSSE(res, "file_warnings", { warnings });
+    }
+
+    // Build augmented prompt with file content prepended
+    let augmentedMessage = message.trim();
+    if (contextText) {
+      augmentedMessage = contextText + "\n\n" + augmentedMessage;
+    }
+
+    // Send the prompt (with image content blocks if any)
+    await session.prompt(augmentedMessage, images.length > 0 ? { images } : undefined);
   } catch (err: any) {
     sendSSE(res, "error", { error: err.message });
     res.end();
@@ -261,6 +313,7 @@ function handleNewSession(_req: http.IncomingMessage, res: http.ServerResponse) 
   }
   sessionId = `web-${Date.now()}`;
   sessionFile = resolveSessionFile(sessionId);
+  fileStore.ensureWorkspace(sessionId);
   jsonResponse(res, 200, { sessionId });
 }
 
@@ -270,7 +323,115 @@ function handleStatus(_req: http.IncomingMessage, res: http.ServerResponse) {
     model: modelId,
     sessionId,
     tools: allToolNames,
+    workspaceDir: fileStore.workspaceDir(sessionId),
   });
+}
+
+// ─── File routes ────────────────────────────────────────────────────────────
+
+async function handleFileUpload(req: http.IncomingMessage, res: http.ServerResponse) {
+  const contentType = req.headers["content-type"] ?? "";
+  if (!contentType.includes("multipart/form-data")) {
+    jsonResponse(res, 400, { error: "Expected multipart/form-data" });
+    return;
+  }
+
+  return new Promise<void>((resolve) => {
+    const busboy = Busboy({ headers: req.headers as any });
+    const uploads: Promise<FileMetadata>[] = [];
+
+    busboy.on("file", (_fieldname: string, stream: any, info: any) => {
+      const { filename, mimeType } = info;
+      const chunks: Buffer[] = [];
+
+      stream.on("data", (chunk: Buffer) => chunks.push(chunk));
+      stream.on("end", () => {
+        const data = Buffer.concat(chunks);
+        const saveName = filename || "unnamed";
+        uploads.push(
+          (async () => {
+            const meta = fileStore.saveFile({
+              sessionId,
+              filename: saveName,
+              data,
+              mimeType,
+              source: "upload",
+            });
+
+            // Extract text from PDFs at upload time
+            if (mimeType === "application/pdf" || saveName.toLowerCase().endsWith(".pdf")) {
+              try {
+                const { text, numPages } = await extractPdfText(data);
+                fileStore.updateFileMetadata(sessionId, meta.filename, {
+                  extractedText: text.slice(0, 200_000),
+                  extractedPages: numPages,
+                });
+                meta.extractedText = text.slice(0, 200_000);
+                meta.extractedPages = numPages;
+              } catch (err) {
+                console.warn(`PDF text extraction failed for ${saveName}:`, err);
+              }
+            }
+
+            return meta;
+          })(),
+        );
+      });
+    });
+
+    busboy.on("finish", async () => {
+      try {
+        const results = await Promise.all(uploads);
+        jsonResponse(res, 200, { files: results });
+      } catch (err: any) {
+        jsonResponse(res, 500, { error: err.message });
+      }
+      resolve();
+    });
+
+    busboy.on("error", (err: Error) => {
+      jsonResponse(res, 500, { error: err.message });
+      resolve();
+    });
+
+    req.pipe(busboy);
+  });
+}
+
+function handleFileList(_req: http.IncomingMessage, res: http.ServerResponse) {
+  fileStore.syncNewFiles(sessionId);
+  const files = fileStore.listFiles(sessionId);
+  jsonResponse(res, 200, { sessionId, files });
+}
+
+function handleFileDownload(_req: http.IncomingMessage, res: http.ServerResponse, filename: string) {
+  const meta = fileStore.getFileMetadata(sessionId, filename);
+  if (!meta) {
+    jsonResponse(res, 404, { error: "File not found" });
+    return;
+  }
+
+  try {
+    const data = fileStore.readFile(sessionId, filename);
+    res.writeHead(200, {
+      ...corsHeaders(),
+      "Content-Type": meta.mimeType,
+      "Content-Length": data.length.toString(),
+      "Content-Disposition": `inline; filename="${meta.originalName}"`,
+    });
+    res.end(data);
+  } catch {
+    jsonResponse(res, 404, { error: "File not found" });
+  }
+}
+
+function handleFileDelete(_req: http.IncomingMessage, res: http.ServerResponse, filename: string) {
+  const deleted = fileStore.deleteFile(sessionId, filename);
+  if (!deleted) {
+    jsonResponse(res, 404, { error: "File not found" });
+    return;
+  }
+  jsonResponse(res, 200, { deleted: true, filename });
 }
 
 // ─── Server ──────────────────────────────────────────────────────────────────
@@ -290,8 +451,18 @@ const server = http.createServer(async (req, res) => {
     await handleChat(req, res);
   } else if (method === "POST" && url.pathname === "/api/session/new") {
     handleNewSession(req, res);
+  } else if (method === "POST" && url.pathname === "/api/files/upload") {
+    await handleFileUpload(req, res);
   } else if (method === "GET" && url.pathname === "/api/status") {
     handleStatus(req, res);
+  } else if (method === "GET" && url.pathname === "/api/files") {
+    handleFileList(req, res);
+  } else if (method === "GET" && url.pathname.startsWith("/api/files/")) {
+    const filename = decodeURIComponent(url.pathname.slice("/api/files/".length));
+    handleFileDownload(req, res, filename);
+  } else if (method === "DELETE" && url.pathname.startsWith("/api/files/")) {
+    const filename = decodeURIComponent(url.pathname.slice("/api/files/".length));
+    handleFileDelete(req, res, filename);
   } else if (method === "GET") {
     // Try serving static file from web/dist, SPA fallback to index.html
     if (!serveStatic(res, url.pathname)) {

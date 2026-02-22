@@ -19,12 +19,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fastify/busboy": "^3.2.0",
     "@lydell/node-pty": "1.2.0-beta.3",
     "@mariozechner/pi-agent-core": "0.52.12",
     "@mariozechner/pi-ai": "0.52.12",
     "@mariozechner/pi-coding-agent": "0.52.12",
     "@mozilla/readability": "^0.6.0",
-    "linkedom": "^0.18.12"
+    "linkedom": "^0.18.12",
+    "pdfjs-dist": "^5.4.624"
   },
   "devDependencies": {
     "@types/node": "^25.2.3",
