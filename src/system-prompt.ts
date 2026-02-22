@@ -1,7 +1,7 @@
 /**
  * System prompt builder for civilclaw.
  *
- * Adapted from openclaw's buildAgentSystemPrompt — stripped of channel-specific
+ * Adapted from civilclaw's buildAgentSystemPrompt — stripped of channel-specific
  * sections (messaging, reactions, TTS, heartbeats, silent replies) and focused
  * purely on coding intelligence.
  */

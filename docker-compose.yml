@@ -1,0 +1,15 @@
+services:
+  civilclaw:
+    build: .
+    container_name: civilclaw
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./workspace:/workspace
+    env_file: .env
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: "2.0"

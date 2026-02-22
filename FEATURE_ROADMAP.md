@@ -1,6 +1,6 @@
 # civilclaw Feature Roadmap
 
-civilclaw is a lightweight terminal AI agent (~1,076 lines, 4 source files) built on the `pi-coding-agent` SDK. Compared to the full openclaw (100+ source files), it's missing several major AI features that significantly impact user experience.
+civilclaw is a lightweight terminal AI agent (~1,076 lines, 4 source files) built on the `pi-coding-agent` SDK. Compared to the full civilclaw (100+ source files), it's missing several major AI features that significantly impact user experience.
 
 This document describes **9 features** to implement, ordered by effort (easiest first), with detailed implementation plans.
 
@@ -121,7 +121,7 @@ Detects when the agent is stuck in loops — repeating the same tool call, ping-
 
 ### Why it matters
 
-Without this, the agent can get stuck retrying failed operations infinitely, burning tokens and time. This is a common failure mode in agentic systems. The full openclaw has a 623-line implementation covering generic repeat detection, ping-pong detection, and a global circuit breaker.
+Without this, the agent can get stuck retrying failed operations infinitely, burning tokens and time. This is a common failure mode in agentic systems. The full civilclaw has a 623-line implementation covering generic repeat detection, ping-pong detection, and a global circuit breaker.
 
 ### New files
 
@@ -390,7 +390,7 @@ The agent can spawn child agents for parallel or delegated work. Each subagent g
 
 ### Why it matters
 
-Complex tasks (e.g., "refactor these 5 files" or "research X while implementing Y") could be parallelized. The agent could spawn a subagent to research while it codes. The full openclaw has a complete subagent registry with depth tracking, announce queues, and nesting support.
+Complex tasks (e.g., "refactor these 5 files" or "research X while implementing Y") could be parallelized. The agent could spawn a subagent to research while it codes. The full civilclaw has a complete subagent registry with depth tracking, announce queues, and nesting support.
 
 ### New files
 
@@ -535,7 +535,7 @@ Lets users customize agent behavior via hook scripts that run at key lifecycle p
 
 ### Why it matters
 
-It's the difference between a closed tool and an extensible platform. Users can add audit logging, prompt modifications, tool restrictions, or custom error recovery that survives updates. The full openclaw has hooks for `before_model_resolve`, `before_prompt_build`, `after_tool_call`, `on_llm_error`, and more.
+It's the difference between a closed tool and an extensible platform. Users can add audit logging, prompt modifications, tool restrictions, or custom error recovery that survives updates. The full civilclaw has hooks for `before_model_resolve`, `before_prompt_build`, `after_tool_call`, `on_llm_error`, and more.
 
 ### New files
 
@@ -642,7 +642,7 @@ Vector-based persistent memory that lets the agent remember information across s
 
 ### Why it matters
 
-Without memory, every civilclaw session starts from zero. The agent can't remember user preferences, past decisions, project context from previous conversations, or learn from mistakes. This is the single biggest gap between civilclaw and the full openclaw. It's what turns a stateless tool into a persistent assistant that knows you and your project.
+Without memory, every civilclaw session starts from zero. The agent can't remember user preferences, past decisions, project context from previous conversations, or learn from mistakes. This is the single biggest gap between civilclaw and the full civilclaw. It's what turns a stateless tool into a persistent assistant that knows you and your project.
 
 ### New dependencies
 

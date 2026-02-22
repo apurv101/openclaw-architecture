@@ -8,9 +8,14 @@
     "civilclaw": "dist/entry.mjs"
   },
   "scripts": {
-    "build": "tsdown src/entry.ts",
+    "build": "tsdown src/entry.ts src/server.ts",
+    "build:web": "cd web && pnpm build",
+    "build:all": "pnpm build && pnpm build:web",
     "dev": "node --import tsx src/entry.ts",
+    "dev:server": "node --import tsx src/server.ts",
+    "dev:web": "cd web && pnpm dev",
     "start": "node dist/entry.mjs",
+    "start:server": "node dist/server.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

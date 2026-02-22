@@ -1,0 +1,6 @@
+ifcopenshell
+ezdxf
+trimesh
+open3d
+laspy[lazrs]
+numpy
