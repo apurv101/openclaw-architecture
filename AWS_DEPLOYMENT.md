@@ -2,7 +2,7 @@
 
 ## Live URL
 
-**http://civilclaw-alb-112433499.us-east-1.elb.amazonaws.com**
+**http://civilclaw-alb-1249569867.us-east-1.elb.amazonaws.com**
 
 ---
 
@@ -37,12 +37,12 @@ Account ID:         324037324697
 ECR Repository:     324037324697.dkr.ecr.us-east-1.amazonaws.com/civilclaw
 ECS Cluster:        civilclaw
 ECS Service:        civilclaw-api
-Task Definition:    civilclaw:1
-ALB:                civilclaw-alb (arn:aws:elasticloadbalancing:us-east-1:324037324697:loadbalancer/app/civilclaw-alb/b949b7965cfc4099)
-ALB DNS:            civilclaw-alb-112433499.us-east-1.elb.amazonaws.com
-Target Group:       civilclaw-tg (arn:aws:elasticloadbalancing:us-east-1:324037324697:targetgroup/civilclaw-tg/f9fb3d3a513b1e11)
-ALB Security Group: sg-0755bffdf7dae7b51 (civilclaw-alb-sg — ports 80, 443 from 0.0.0.0/0)
-ECS Security Group: sg-00256a07b1085b593 (civilclaw-ecs-sg — port 3001 from ALB SG only)
+Task Definition:    civilclaw:2
+ALB:                civilclaw-alb (arn:aws:elasticloadbalancing:us-east-1:324037324697:loadbalancer/app/civilclaw-alb/58476e834dcfb8e0)
+ALB DNS:            civilclaw-alb-1249569867.us-east-1.elb.amazonaws.com
+Target Group:       civilclaw-tg (arn:aws:elasticloadbalancing:us-east-1:324037324697:targetgroup/civilclaw-tg/bfe85dc6477e2c5c)
+ALB Security Group: sg-000ee20c26b3a446a (civilclaw-alb-sg — ports 80, 443 from 0.0.0.0/0)
+ECS Security Group: sg-0f09d69458e00340e (civilclaw-ecs-sg — port 3001 from ALB SG only)
 VPC:                vpc-04a495305334ab696 (default)
 Subnets:            subnet-0ef6c9d61b7ac740a (us-east-1a), subnet-048381d0a1f40590b (us-east-1c)
 Log Group:          /ecs/civilclaw
@@ -53,8 +53,8 @@ IAM Task Role:      ecsTaskRole
 ### Secrets Manager ARNs (with random suffix)
 
 ```
-OpenAI:    arn:aws:secretsmanager:us-east-1:324037324697:secret:civilclaw/openai-api-key-Al525Y
-Anthropic: arn:aws:secretsmanager:us-east-1:324037324697:secret:civilclaw/anthropic-api-key-Ujaox0
+OpenAI:    arn:aws:secretsmanager:us-east-1:324037324697:secret:civilclaw/openai-api-key-pcmAkH
+Anthropic: arn:aws:secretsmanager:us-east-1:324037324697:secret:civilclaw/anthropic-api-key-LH6Kvd
 ```
 
 ---
@@ -150,11 +150,11 @@ aws ecs describe-services --cluster civilclaw --services civilclaw-api --region 
   --query "services[0].{status:status,running:runningCount,desired:desiredCount}"
 
 # Health check endpoint
-curl -s http://civilclaw-alb-112433499.us-east-1.elb.amazonaws.com/api/status | python3 -m json.tool
+curl -s http://civilclaw-alb-1249569867.us-east-1.elb.amazonaws.com/api/status | python3 -m json.tool
 
 # Target group health
 aws elbv2 describe-target-health \
-  --target-group-arn arn:aws:elasticloadbalancing:us-east-1:324037324697:targetgroup/civilclaw-tg/f9fb3d3a513b1e11 \
+  --target-group-arn arn:aws:elasticloadbalancing:us-east-1:324037324697:targetgroup/civilclaw-tg/bfe85dc6477e2c5c \
   --region us-east-1
 ```
 
@@ -205,7 +205,7 @@ When ready for a custom domain with HTTPS:
 2. Validate via DNS (add the CNAME record ACM gives you)
 3. Add HTTPS listener on port 443 to the ALB
 4. Redirect HTTP (port 80) to HTTPS
-5. Point your domain CNAME to `civilclaw-alb-112433499.us-east-1.elb.amazonaws.com`
+5. Point your domain CNAME to `civilclaw-alb-1249569867.us-east-1.elb.amazonaws.com`
 
 ---
 
@@ -220,12 +220,12 @@ aws ecs delete-service --cluster civilclaw --service civilclaw-api --force --reg
 aws ecs delete-cluster --cluster civilclaw --region us-east-1
 
 # 3. Delete ALB + target group + listener
-aws elbv2 delete-load-balancer --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:324037324697:loadbalancer/app/civilclaw-alb/b949b7965cfc4099 --region us-east-1
-aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:324037324697:targetgroup/civilclaw-tg/f9fb3d3a513b1e11 --region us-east-1
+aws elbv2 delete-load-balancer --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:324037324697:loadbalancer/app/civilclaw-alb/58476e834dcfb8e0 --region us-east-1
+aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:324037324697:targetgroup/civilclaw-tg/bfe85dc6477e2c5c --region us-east-1
 
 # 4. Delete security groups
-aws ec2 delete-security-group --group-id sg-00256a07b1085b593 --region us-east-1
-aws ec2 delete-security-group --group-id sg-0755bffdf7dae7b51 --region us-east-1
+aws ec2 delete-security-group --group-id sg-0f09d69458e00340e --region us-east-1
+aws ec2 delete-security-group --group-id sg-000ee20c26b3a446a --region us-east-1
 
 # 5. Delete ECR repository (and all images)
 aws ecr delete-repository --repository-name civilclaw --force --region us-east-1
